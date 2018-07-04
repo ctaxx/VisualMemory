@@ -31,17 +31,21 @@ import java.util.logging.Logger;
 public class SequenceFrame extends Frame implements WindowListener, ActionListener,
     MouseListener{
 
-    Button startBtn, cancelBtn;
-    Choice numColoursChoice, sequenceLengthChoice;
+    private final Button startBtn, cancelBtn;
+    private final Choice numColoursChoice, sequenceLengthChoice;
 
-    Color currentColor, taskArr[];
-    ArrayList <Color> answerArr;
+    private Color currentColor, taskArr[];
+    private ArrayList <Color> answerArr;
 
-    GraphicButton redButton, yellowButton, greenButton, blueButton;
+    private final GraphicButton redButton, yellowButton, greenButton, blueButton;
     
-    int sequenceLength = 4;
+    private int sequenceLength;
+    
+    private long score;
 
-    Writer sout;
+    private Writer sout;
+    
+    private final int arrayHeight = 70;
     
     private final int INITIAL_STATE = 0;
     private final int SHOW_STATE = 1;
@@ -183,7 +187,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         Graphics g = getGraphics();
         for (int i = 0; i < array.size(); i++){
             g.setColor(array.get(i));
-            g.fillRect((i+1)*25, getSize().height-70, 24, 24);  
+            g.fillRect((i+1)*25, getSize().height-arrayHeight, 24, 24);  
         }
     }
     
@@ -239,6 +243,13 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         }
         if (taskArr.length == answerArr.size()){
             //todo output result to file
+            // todo show result to user
+            try {
+                //todo output result to file
+                sleep(500);
+            } catch (InterruptedException ex) {
+                System.err.println(ex.getMessage());
+            }
             setAppState(INITIAL_STATE);
         }
     }
@@ -253,18 +264,18 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 //        System.out.println("the state is being setted to " + state);
         if (state == INITIAL_STATE){
             this.state = state;
+            answerArr = new ArrayList<Color>();
+            repaint();
             startBtn.setEnabled(true);
             cancelBtn.setEnabled(false);
         }
         if (state == SHOW_STATE){
             this.state = state;
-            answerArr = new ArrayList<Color>();
             startBtn.setEnabled(false);
             cancelBtn.setEnabled(true);
         }
         if (state == GETTIN_RESULT_STATE){
             this.state = state;
-            //todo
         }
     }
     
