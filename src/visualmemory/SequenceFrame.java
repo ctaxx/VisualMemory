@@ -20,7 +20,6 @@ import java.io.FileWriter;
 import java.io.Writer;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +46,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     private final int INITIAL_STATE = 0;
     private final int SHOW_STATE = 1;
     private final int GETTIN_RESULT_STATE = 2;
-    int state = INITIAL_STATE;
+    int state;
     
 
     public static void main(String[] args) {
@@ -80,9 +79,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         for(int i=0; i<sequenceLength; i++){
             taskArr[i]= Color.gray;
         }
-        
-        answerArr = new ArrayList<Color>();
-        
+       
         startBtn = new Button("Старт");
         startBtn.addActionListener(this);
         cancelBtn = new Button("Отмена");
@@ -109,6 +106,9 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         add(northPanel, BorderLayout.NORTH);
         
         addWindowListener(this);
+        addMouseListener(this);
+        
+        setAppState(INITIAL_STATE);
 
         setVisible(true);
     }
@@ -146,18 +146,11 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             sequenceLength = sequenceLengthChoice.getSelectedIndex()+1;
             createTaskArr(sequenceLength, numColoursChoice.getSelectedIndex()+2);
 //            repaint();
-            startBtn.setEnabled(false);
-            cancelBtn.setEnabled(true);
-            state = SHOW_STATE;
+            setAppState(SHOW_STATE);
             showSequence();
-            addMouseListener(this);
-//            state = GETTIN_RESULT_STATE;
         }
         if (e.getSource()==cancelBtn){
-            
-            state = INITIAL_STATE;
-            startBtn.setEnabled(true);
-            cancelBtn.setEnabled(false);
+            setAppState(INITIAL_STATE);
         }
     }
 
@@ -211,7 +204,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 
     public void mousePressed(MouseEvent e) {
         Point point = e.getPoint();
-        if (point.getX()>=(getSize().width-40) && state == GETTIN_RESULT_STATE){
+        if (point.getX()>=(getSize().width-40) && state == GETTIN_RESULT_STATE){   
             if (redButton.isWithin(point)){
                 currentColor = Color.red;
             }
@@ -239,13 +232,40 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     public void mouseExited(MouseEvent e) {}
 
     private void evalAnswers() {
-        
+        for (int i = 0; i < answerArr.size(); i++){
+            if (answerArr.get(i) != taskArr[i]){
+                // todo interrupt evaluation and output result
+            }
+        }
+        if (taskArr.length == answerArr.size()){
+            //todo output result to file
+            setAppState(INITIAL_STATE);
+        }
     }
 
     private void showSequence() {
         Runnable runnable = new Sequence(taskArr);
         Thread thread = new Thread(runnable);
         thread.start();
+    }
+
+    private void setAppState(int state) {
+//        System.out.println("the state is being setted to " + state);
+        if (state == INITIAL_STATE){
+            this.state = state;
+            startBtn.setEnabled(true);
+            cancelBtn.setEnabled(false);
+        }
+        if (state == SHOW_STATE){
+            this.state = state;
+            answerArr = new ArrayList<Color>();
+            startBtn.setEnabled(false);
+            cancelBtn.setEnabled(true);
+        }
+        if (state == GETTIN_RESULT_STATE){
+            this.state = state;
+            //todo
+        }
     }
     
     public class Sequence implements Runnable{
@@ -256,7 +276,6 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         }
 
         public void run() {
-            
             for (Color c : array) {
                 if (state != SHOW_STATE)
                     break;
@@ -271,7 +290,8 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
                     System.err.println(ex.getMessage());
                 }    
             }
-            state = GETTIN_RESULT_STATE;
+            if (state != INITIAL_STATE)
+                setAppState(GETTIN_RESULT_STATE);
         }
     }
 
