@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,14 +33,15 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     MouseListener{
 
     private final Button startBtn, cancelBtn;
-    private final Choice numColoursChoice, sequenceLengthChoice;
+    private final Choice numColoursChoice;
+//    , sequenceLengthChoice;
 
     private Color currentColor, taskArr[];
     private ArrayList <Color> answerArr;
 
     private final GraphicButton redButton, yellowButton, greenButton, blueButton;
     
-    private int sequenceLength;
+    private int sequenceLength = 3;
     
     private long score;
 
@@ -71,13 +73,6 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         numColoursChoice.add("2");
         numColoursChoice.add("3");
         numColoursChoice.add("4");
-        
-        sequenceLengthChoice = new Choice();
-        sequenceLengthChoice.add("1");
-        sequenceLengthChoice.add("2");
-        sequenceLengthChoice.add("3");
-        sequenceLengthChoice.add("4");
-        sequenceLengthChoice.add("5");
 
         taskArr = new Color[sequenceLength];
         for(int i=0; i<sequenceLength; i++){
@@ -91,8 +86,6 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         cancelBtn.setEnabled(false);
 
         Label numColoursLabel = new Label("Colours");
-        Label sequenceLengthLabel = new Label("Length");
-
         
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
@@ -103,8 +96,6 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         add(southPanel, BorderLayout.SOUTH);
         
         Panel northPanel = new Panel();
-        northPanel.add(sequenceLengthLabel);
-        northPanel.add(sequenceLengthChoice);
         northPanel.add(numColoursLabel);
         northPanel.add(numColoursChoice);
         add(northPanel, BorderLayout.NORTH);
@@ -113,7 +104,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         addMouseListener(this);
         
         setAppState(INITIAL_STATE);
-
+        drawBtns();
         setVisible(true);
     }
 
@@ -140,20 +131,20 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     public void windowDeactivated(WindowEvent e) {
     }
 
-    @Override
-    public void paint(Graphics g){
-        drawBtns();
-    }
+//    @Override
+//    public void paint(Graphics g){
+//        drawBtns();
+//    }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==startBtn){
-            sequenceLength = sequenceLengthChoice.getSelectedIndex()+1;
-            createTaskArr(sequenceLength, numColoursChoice.getSelectedIndex()+2);
+//            createTaskArr(sequenceLength, numColoursChoice.getSelectedIndex()+2);
 //            repaint();
             setAppState(SHOW_STATE);
             showSequence();
         }
         if (e.getSource()==cancelBtn){
+            outputResult();
             setAppState(INITIAL_STATE);
         }
     }
@@ -235,22 +226,26 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 
     public void mouseExited(MouseEvent e) {}
 
+    // todo optimize
     private void evalAnswers() {
         for (int i = 0; i < answerArr.size(); i++){
             if (answerArr.get(i) != taskArr[i]){
-                // todo interrupt evaluation and output result
+            // todo show result to user
+                sequenceLength--;
+                System.out.println("sequence length is " + sequenceLength);
+                setAppState(SHOW_STATE);
             }
         }
         if (taskArr.length == answerArr.size()){
-            //todo output result to file
             // todo show result to user
             try {
-                //todo output result to file
                 sleep(500);
             } catch (InterruptedException ex) {
                 System.err.println(ex.getMessage());
             }
-            setAppState(INITIAL_STATE);
+            sequenceLength++;
+            System.out.println("sequence length is " + sequenceLength);
+            setAppState(SHOW_STATE);
         }
     }
 
@@ -264,19 +259,34 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 //        System.out.println("the state is being setted to " + state);
         if (state == INITIAL_STATE){
             this.state = state;
-            answerArr = new ArrayList<Color>();
-            repaint();
+    
+            clearAnswerArr();
             startBtn.setEnabled(true);
             cancelBtn.setEnabled(false);
         }
         if (state == SHOW_STATE){
             this.state = state;
+            clearAnswerArr();
             startBtn.setEnabled(false);
             cancelBtn.setEnabled(true);
+            createTaskArr(sequenceLength, numColoursChoice.getSelectedIndex()+2);
+            showSequence();
         }
         if (state == GETTIN_RESULT_STATE){
             this.state = state;
         }
+    }
+
+    private void outputResult() {
+        
+    }
+
+    private void clearAnswerArr() {
+        for(int i=0; i< answerArr.size(); i++){
+            answerArr.set(i, Color.white);
+        }
+        drawArr(answerArr);
+        answerArr = new ArrayList<Color>();
     }
     
     public class Sequence implements Runnable{
