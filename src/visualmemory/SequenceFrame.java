@@ -41,7 +41,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 
     private final GraphicButton redButton, yellowButton, greenButton, blueButton;
     
-    private int sequenceLength = 3;
+    private int sequenceLength;
     
     private long score;
 
@@ -73,11 +73,6 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         numColoursChoice.add("2");
         numColoursChoice.add("3");
         numColoursChoice.add("4");
-
-        taskArr = new Color[sequenceLength];
-        for(int i=0; i<sequenceLength; i++){
-            taskArr[i]= Color.gray;
-        }
        
         startBtn = new Button("Старт");
         startBtn.addActionListener(this);
@@ -103,8 +98,8 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         addWindowListener(this);
         addMouseListener(this);
         
+        answerArr = new ArrayList<Color>();
         setAppState(INITIAL_STATE);
-        drawBtns();
         setVisible(true);
     }
 
@@ -131,20 +126,18 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     public void windowDeactivated(WindowEvent e) {
     }
 
-//    @Override
-//    public void paint(Graphics g){
-//        drawBtns();
-//    }
+    @Override
+    public void paint(Graphics g){
+        drawBtns();
+    }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==startBtn){
-//            createTaskArr(sequenceLength, numColoursChoice.getSelectedIndex()+2);
-//            repaint();
             setAppState(SHOW_STATE);
-            showSequence();
         }
         if (e.getSource()==cancelBtn){
             outputResult();
+            clearAnswerArr();
             setAppState(INITIAL_STATE);
         }
     }
@@ -228,13 +221,13 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 
     // todo optimize
     private void evalAnswers() {
-        for (int i = 0; i < answerArr.size(); i++){
-            if (answerArr.get(i) != taskArr[i]){
+        if (answerArr.get(answerArr.size()-1) != taskArr[answerArr.size()-1]){
             // todo show result to user
+            if (sequenceLength > 3){
                 sequenceLength--;
-                System.out.println("sequence length is " + sequenceLength);
-                setAppState(SHOW_STATE);
             }
+            System.out.println("sequence length is " + sequenceLength);
+            setAppState(SHOW_STATE);
         }
         if (taskArr.length == answerArr.size()){
             // todo show result to user
@@ -256,11 +249,9 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     }
 
     private void setAppState(int state) {
-//        System.out.println("the state is being setted to " + state);
         if (state == INITIAL_STATE){
             this.state = state;
-    
-            clearAnswerArr();
+            sequenceLength = 3;
             startBtn.setEnabled(true);
             cancelBtn.setEnabled(false);
         }
