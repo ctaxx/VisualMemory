@@ -100,6 +100,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         
         answerArr = new ArrayList<Color>();
         setAppState(INITIAL_STATE);
+        
         setVisible(true);
     }
 
@@ -226,8 +227,11 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             if (sequenceLength > 3){
                 sequenceLength--;
             }
+            drawResultMark(false);
             System.out.println("sequence length is " + sequenceLength);
             setAppState(SHOW_STATE);
+        }else{
+            drawResultMark(true);
         }
         if (taskArr.length == answerArr.size()){
             // todo show result to user
@@ -271,6 +275,16 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     private void outputResult() {
         
     }
+    
+    private void drawResultMark(boolean mark){
+        Graphics g = getGraphics();
+        if (mark){
+            g.setColor(Color.GREEN);
+        }else{
+            g.setColor(Color.RED);
+        }
+        g.fillOval(getSize().width-30, getSize().height-70, 20, 20); 
+    }
 
     private void clearAnswerArr() {
         for(int i=0; i< answerArr.size(); i++){
@@ -306,5 +320,4 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
                 setAppState(GETTIN_RESULT_STATE);
         }
     }
-
 }
