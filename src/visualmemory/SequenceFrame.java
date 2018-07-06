@@ -40,10 +40,11 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     private ArrayList <Color> answerArr;
 
     private final GraphicButton redButton, yellowButton, greenButton, blueButton;
+    private Label scoreLabel;
     
     private int sequenceLength;
     
-    private long score;
+    private int score;
 
     private Writer sout;
     
@@ -81,6 +82,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         cancelBtn.setEnabled(false);
 
         Label numColoursLabel = new Label("Colours");
+        scoreLabel = new Label("       ");
         
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
@@ -93,6 +95,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         Panel northPanel = new Panel();
         northPanel.add(numColoursLabel);
         northPanel.add(numColoursChoice);
+        northPanel.add(scoreLabel);
         add(northPanel, BorderLayout.NORTH);
         
         addWindowListener(this);
@@ -223,7 +226,6 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     // todo optimize
     private void evalAnswers() {
         if (answerArr.get(answerArr.size()-1) != taskArr[answerArr.size()-1]){
-            // todo show result to user
             if (sequenceLength > 3){
                 sequenceLength--;
             }
@@ -232,6 +234,8 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             setAppState(SHOW_STATE);
         }else{
             drawResultMark(true);
+            score++;
+            scoreLabel.setText(Integer.toString(score));
         }
         if (taskArr.length == answerArr.size()){
             // todo show result to user
@@ -256,6 +260,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         if (state == INITIAL_STATE){
             this.state = state;
             sequenceLength = 3;
+            score = 0;
             startBtn.setEnabled(true);
             cancelBtn.setEnabled(false);
         }
