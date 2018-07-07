@@ -17,6 +17,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     private Label scoreLabel;
     
     private int sequenceLength;
+    private int maxSequenceLength = 0;
     
     private int score;
 
@@ -245,6 +247,9 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
                 System.err.println(ex.getMessage());
             }
             sequenceLength++;
+            if (sequenceLength > maxSequenceLength){
+                maxSequenceLength = sequenceLength;
+            }
             System.out.println("sequence length is " + sequenceLength);
             setAppState(SHOW_STATE);
         }
@@ -278,7 +283,23 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     }
 
     private void outputResult() {
-        
+        Date date = new Date();
+            String result = date.toString()
+                    +" score="+ Integer.toString(score)
+                    +" maxSequenceLength=" + Integer.toString(maxSequenceLength)
+                    +" colours="+ numColoursChoice.getSelectedItem();
+            try{
+                sout = new FileWriter("d:/VMresult.txt", true);
+                for (int i = 0; i< result.length(); i++){
+                    sout.write(result.charAt(i));
+                }
+                sout.write('\n');
+                sout.flush();
+                sout.close();
+               
+            }catch(IOException ex){
+                System.err.println(ex.getMessage());
+            }
     }
     
     private void drawResultMark(boolean mark){

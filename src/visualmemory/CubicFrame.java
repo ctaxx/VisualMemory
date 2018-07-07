@@ -17,6 +17,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
@@ -194,7 +195,9 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                 sout.flush();
                 sout.close();
                
-            }catch(Exception ex){}
+            }catch(IOException ex){
+                System.err.println(ex.getMessage());
+            }
 
         }
     }
