@@ -21,10 +21,11 @@ import java.io.IOException;
 import java.io.Writer;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONStreamAware;
 
 /**
  *
@@ -109,26 +110,33 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         setVisible(true);
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
         System.exit(0);
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
@@ -137,6 +145,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         drawBtns();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==startBtn){
             setAppState(SHOW_STATE);
@@ -196,6 +205,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         blueButton.draw(g);
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         Point point = e.getPoint();
         if (point.getX()>=(getSize().width-40) && state == GETTIN_RESULT_STATE){   
@@ -217,12 +227,16 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         }
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {}
 
+    @Override
     public void mouseReleased(MouseEvent e) {}
 
+    @Override
     public void mouseEntered(MouseEvent e) {}
 
+    @Override
     public void mouseExited(MouseEvent e) {}
 
     // todo optimize
@@ -284,22 +298,29 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 
     private void outputResult() {
         Date date = new Date();
-            String result = date.toString()
-                    +" score="+ Integer.toString(score)
-                    +" maxSequenceLength=" + Integer.toString(maxSequenceLength)
-                    +" colours="+ numColoursChoice.getSelectedItem();
-            try{
-                sout = new FileWriter("d:/VMresult.txt", true);
-                for (int i = 0; i< result.length(); i++){
-                    sout.write(result.charAt(i));
-                }
-                sout.write('\n');
-                sout.flush();
-                sout.close();
-               
-            }catch(IOException ex){
-                System.err.println(ex.getMessage());
+        JSONStreamAware jSONStreamAware;
+        JSONObject resultJSONObject = new JSONObject();
+        resultJSONObject.put("name", "their names");
+        jSONStreamAware = resultJSONObject;
+        
+        String result = date.toString()
+                +" score="+ Integer.toString(score)
+                +" maxSequenceLength=" + Integer.toString(maxSequenceLength)
+                +" colours="+ numColoursChoice.getSelectedItem();
+        try{
+            sout = new FileWriter("d:/VMresult.txt", true);
+            for (int i = 0; i< result.length(); i++){
+                sout.write(result.charAt(i));
             }
+            sout.write('\n');
+            jSONStreamAware.writeJSONString(sout);
+            sout.write('\n');
+            sout.flush();
+            sout.close();
+               
+        }catch(IOException ex){
+            System.err.println(ex.getMessage());
+        }   
     }
     
     private void drawResultMark(boolean mark){
@@ -327,6 +348,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             this.array = array;
         }
 
+        @Override
         public void run() {
             for (Color c : array) {
                 if (state != SHOW_STATE)

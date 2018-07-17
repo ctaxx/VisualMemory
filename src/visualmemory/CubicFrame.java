@@ -181,8 +181,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                 }
             }
             Date date = new Date();
-            String result = new String();
-            result = date.toString()+" "+Integer.toString(cols)+"X"
+            String result = date.toString()+" "+Integer.toString(cols)+"X"
                     +Integer.toString(rows)
                     +" colours="+ numColoursChoice.getSelectedItem()
                     +" result="+Boolean.toString(check);
