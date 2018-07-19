@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONStreamAware;
 
 /**
  *
@@ -28,16 +30,21 @@ import java.util.Date;
 public class CubicFrame extends Frame implements WindowListener, ActionListener,
     MouseListener{
 
-    Button answerBtn, okBtn, startBtn;
+    Button answerBtn, okBtn, startBtn, cancelBtn;
     Choice numColoursChoice, numColsChoice, numRowsChoice;
 
     Color currentColor, taskArr[][], answerArr[][];
 
     GraphicButton redButton, yellowButton, greenButton, blueButton;
     
-    int cols = 4, rows = 4;
+    int cols = 2, rows = 2;
 
     Writer sout;
+    
+    private final int INITIAL_STATE = 0;
+    private final int SHOW_STATE = 1;
+    private final int GETTIN_RESULT_STATE = 2;
+    int state;
 
     public static void main(String[] args) {
         CubicFrame myFrame = new CubicFrame();
@@ -83,10 +90,13 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         startBtn.addActionListener(this);
         answerBtn = new Button("Отвечать");
         answerBtn.addActionListener(this);
-        answerBtn.setEnabled(false);
+        answerBtn.setVisible(false);
         okBtn = new Button("Ok");
         okBtn.addActionListener(this);
-        okBtn.setEnabled(false);
+        okBtn.setVisible(false);
+        cancelBtn = new Button("Отмена");
+        cancelBtn.setVisible(false);
+        cancelBtn.addActionListener(this);
 
         Label numColoursLabel = new Label("Colours");
         Label numColsLabel = new Label("Cols");
@@ -99,6 +109,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         p_south.add(startBtn);
         p_south.add(answerBtn);
         p_south.add(okBtn);
+        p_south.add(cancelBtn);
         add(p_south, BorderLayout.SOUTH);
         
         Panel p_north = new Panel();
@@ -159,8 +170,8 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             rows = numRowsChoice.getSelectedIndex()+1;
             createTaskArr(cols,rows,numColoursChoice.getSelectedIndex()+2);
             repaint();
-            startBtn.setEnabled(false);
-            answerBtn.setEnabled(true);
+            startBtn.setVisible(false);
+            answerBtn.setVisible(true);
         }
         if (e.getSource()==answerBtn){
             answerArr = new Color[cols][rows];
@@ -170,14 +181,14 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                 }
             }
             drawArr(answerArr);
-            answerBtn.setEnabled(false);
-            okBtn.setEnabled(true);
+            answerBtn.setVisible(false);
+            okBtn.setVisible(true);
             addMouseListener(this);
         }
         if (e.getSource()==okBtn){
             removeMouseListener(this);
-            okBtn.setEnabled(false);
-            startBtn.setEnabled(true);
+            okBtn.setVisible(false);
+            startBtn.setVisible(true);
             drawArr(taskArr);
             
             boolean check = true;
@@ -188,25 +199,41 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                     }
                 }
             }
-            Date date = new Date();
-            String result = date.toString()+" "+Integer.toString(cols)+"X"
-                    +Integer.toString(rows)
-                    +" colours="+ numColoursChoice.getSelectedItem()
-                    +" result="+Boolean.toString(check);
-            try{
-                sout = new FileWriter("d:/VMresult.txt", true);
-                for (int i = 0; i< result.length(); i++){
-                    sout.write(result.charAt(i));
-                }
-                sout.write('\n');
-                sout.flush();
-                sout.close();
-               
-            }catch(IOException ex){
-                System.err.println(ex.getMessage());
-            }
+            outputResult(check);
 
         }
+    }
+    
+    private void outputResult(boolean isChecked) {
+        Date date = new Date();
+//        JSONStreamAware jSONStreamAware;
+//        JSONObject resultJSONObject = new JSONObject();
+//        resultJSONObject.put("game", "ColorSequence");
+//        resultJSONObject.put("date", date.toString());
+//        resultJSONObject.put("score", Integer.toString(score));
+//        resultJSONObject.put("maxSequenceLength", Integer.toString(maxSequenceLength));
+//        resultJSONObject.put("colours", numColoursChoice.getSelectedItem());
+//        jSONStreamAware = resultJSONObject;
+        
+        String result = date.toString()+" "+Integer.toString(cols)+"X"
+                    +Integer.toString(rows)
+                    +" colours="+ numColoursChoice.getSelectedItem()
+                    +" result="+Boolean.toString(isChecked);
+
+        try{
+            sout = new FileWriter("d:/VMresult.txt", true);
+            for (int i = 0; i< result.length(); i++){
+                sout.write(result.charAt(i));
+            }
+//            sout.write('\n');
+//            jSONStreamAware.writeJSONString(sout);
+            sout.write('\n');
+            sout.flush();
+            sout.close();
+               
+        }catch(IOException ex){
+            System.err.println(ex.getMessage());
+        }   
     }
 
     private void createTaskArr(int cols, int rows, int colours){
@@ -300,13 +327,19 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             }
         }
     }
+    
+    
 
+    @Override
     public void mouseClicked(MouseEvent e) {}
 
+    @Override
     public void mouseReleased(MouseEvent e) {}
 
+    @Override
     public void mouseEntered(MouseEvent e) {}
 
+    @Override
     public void mouseExited(MouseEvent e) {}
 
 }
