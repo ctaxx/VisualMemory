@@ -49,7 +49,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         setResizable(false);
 
         redButton = new GraphicButton(getSize().width-40, 65, Color.red);
-        yellowButton = new GraphicButton(getSize().width-40, 100, Color.yellow);
+        yellowButton = new GraphicButton(getSize().width-40, 100, Color.orange);
         greenButton = new GraphicButton(getSize().width-40, 135, Color.green);
         blueButton = new GraphicButton(getSize().width-40, 170, Color.blue);
         
@@ -115,26 +115,33 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         setVisible(true);
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
         System.exit(0);
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
@@ -145,6 +152,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         drawBtnsRects(currentColor);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==startBtn){
             cols = numColsChoice.getSelectedIndex()+1;
@@ -217,7 +225,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                 switch(int_colour){
                     case 1: taskArr[i][j] = Color.red;
                     break;
-                    case 2:taskArr[i][j] = Color.yellow;
+                    case 2:taskArr[i][j] = Color.orange;
                     break;
                     case 3:taskArr[i][j] = Color.green;
                     break;
@@ -262,6 +270,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         blueButton.isPressBtn(currentClr, g);
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         Point point = e.getPoint();
         if (point.getX()>=(getSize().width-40)){
@@ -269,7 +278,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                 currentColor = Color.red;
             }
             if (yellowButton.isWithin(point)){
-                currentColor = Color.yellow;
+                currentColor = Color.orange;
             }
             if (greenButton.isWithin(point)){
                 currentColor = Color.green;

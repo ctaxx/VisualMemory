@@ -41,7 +41,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     private Color currentColor, taskArr[];
     private ArrayList <Color> answerArr;
 
-    private final GraphicButton redButton, yellowButton, greenButton, blueButton;
+    private final GraphicButton redButton, orangeButton, greenButton, blueButton;
     private Label scoreLabel;
     
     private int sequenceLength;
@@ -69,7 +69,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         setResizable(false);
 
         redButton = new GraphicButton(getSize().width-40, 65, Color.red);
-        yellowButton = new GraphicButton(getSize().width-40, 100, Color.yellow);
+        orangeButton = new GraphicButton(getSize().width-40, 100, Color.orange);
         greenButton = new GraphicButton(getSize().width-40, 135, Color.green);
         blueButton = new GraphicButton(getSize().width-40, 170, Color.blue);
         
@@ -172,7 +172,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             switch(int_colour){
                 case 1: taskArr[i] = Color.red;
                 break;
-                case 2:taskArr[i] = Color.yellow;
+                case 2:taskArr[i] = Color.orange;
                 break;
                 case 3:taskArr[i] = Color.green;
                 break;
@@ -200,7 +200,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         Graphics g = getGraphics();
 
         redButton.draw(g);
-        yellowButton.draw(g);
+        orangeButton.draw(g);
         greenButton.draw(g);
         blueButton.draw(g);
     }
@@ -212,8 +212,8 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             if (redButton.isWithin(point)){
                 currentColor = Color.red;
             }
-            if (yellowButton.isWithin(point)){
-                currentColor = Color.yellow;
+            if (orangeButton.isWithin(point)){
+                currentColor = Color.orange;
             }
             if (greenButton.isWithin(point)){
                 currentColor = Color.green;
@@ -300,19 +300,23 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         Date date = new Date();
         JSONStreamAware jSONStreamAware;
         JSONObject resultJSONObject = new JSONObject();
-        resultJSONObject.put("name", "their names");
+        resultJSONObject.put("game", "ColorSequence");
+        resultJSONObject.put("date", date.toString());
+        resultJSONObject.put("score", Integer.toString(score));
+        resultJSONObject.put("maxSequenceLength", Integer.toString(maxSequenceLength));
+        resultJSONObject.put("colours", numColoursChoice.getSelectedItem());
         jSONStreamAware = resultJSONObject;
         
-        String result = date.toString()
-                +" score="+ Integer.toString(score)
-                +" maxSequenceLength=" + Integer.toString(maxSequenceLength)
-                +" colours="+ numColoursChoice.getSelectedItem();
+//        String result = date.toString()
+//                +" score="+ Integer.toString(score)
+//                +" maxSequenceLength=" + Integer.toString(maxSequenceLength)
+//                +" colours="+ numColoursChoice.getSelectedItem();
         try{
             sout = new FileWriter("d:/VMresult.txt", true);
-            for (int i = 0; i< result.length(); i++){
-                sout.write(result.charAt(i));
-            }
-            sout.write('\n');
+//            for (int i = 0; i< result.length(); i++){
+//                sout.write(result.charAt(i));
+//            }
+//            sout.write('\n');
             jSONStreamAware.writeJSONString(sout);
             sout.write('\n');
             sout.flush();
