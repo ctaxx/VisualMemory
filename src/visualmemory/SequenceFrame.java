@@ -159,7 +159,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     private void createTaskArr(int sequenceLength, int colours) {
         Random random = new Random();
         taskArr = new Color[sequenceLength];
-        int currentColour = 0;
+        int currentColour;
         for (int i = 0; i < sequenceLength; i++) {
             currentColour = random.nextInt(colours) + 1;
 
@@ -221,7 +221,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
             }
             answerArr.add(currentColor);
             drawArr(answerArr);
-            evalAnswers();
+            checkResult();
         }
     }
 
@@ -242,7 +242,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
     }
 
     // todo optimize
-    private void evalAnswers() {
+    private void checkResult() {
         if (answerArr.get(answerArr.size() - 1) != taskArr[answerArr.size() - 1]) {
             if (sequenceLength > 3) {
                 sequenceLength--;
