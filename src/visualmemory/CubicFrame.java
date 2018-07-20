@@ -32,13 +32,15 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
 
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
     Choice numColoursChoice;
-//            , numColsChoice, numRowsChoice;
 
     Color currentColor, taskArr[][], answerArr[][];
 
     GraphicButton redButton, yellowButton, greenButton, blueButton;
+    private Label scoreLabel;
 
     int cols = 2, rows = 2;
+    int numColours = 0;
+    int maxColours = 0;
     int maxCols = 0;
     int maxRows = 0;
 
@@ -71,25 +73,12 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         numColoursChoice.add("3");
         numColoursChoice.add("4");
 
-//        numColsChoice = new Choice();
-//        numColsChoice.add("1");
-//        numColsChoice.add("2");
-//        numColsChoice.add("3");
-//        numColsChoice.add("4");
-//        numColsChoice.add("5");
-//
-//        numRowsChoice = new Choice();
-//        numRowsChoice.add("1");
-//        numRowsChoice.add("2");
-//        numRowsChoice.add("3");
-//        numRowsChoice.add("4");
-//        numRowsChoice.add("5");
-        taskArr = new Color[cols][rows];
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < rows; j++) {
-                taskArr[i][j] = Color.gray;
-            }
-        }
+//        taskArr = new Color[cols][rows];
+//        for (int i = 0; i < cols; i++) {
+//            for (int j = 0; j < rows; j++) {
+//                taskArr[i][j] = Color.gray;
+//            }
+//        }
 
         startBtn = new Button("Старт");
         startBtn.addActionListener(this);
@@ -97,34 +86,30 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         answerBtn.addActionListener(this);
         okBtn = new Button("Ok");
         okBtn.addActionListener(this);
-        cancelBtn = new Button("Отмена");
+        cancelBtn = new Button("Стоп");
         cancelBtn.addActionListener(this);
         nextBtn = new Button("Следующий");
         nextBtn.addActionListener(this);
 
         Label numColoursLabel = new Label("Colours");
-//        Label numColsLabel = new Label("Cols");
-//        Label numRowsLabel = new Label("Rows");
+        scoreLabel = new Label("       ");
 
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
 
-        Panel p_south = new Panel();
-        p_south.add(startBtn);
-        p_south.add(answerBtn);
-        p_south.add(okBtn);
-        p_south.add(nextBtn);
-        p_south.add(cancelBtn);     
-        add(p_south, BorderLayout.SOUTH);
+        Panel southPanel = new Panel();
+        southPanel.add(startBtn);
+        southPanel.add(answerBtn);
+        southPanel.add(okBtn);
+        southPanel.add(nextBtn);
+        southPanel.add(cancelBtn);
+        add(southPanel, BorderLayout.SOUTH);
 
-        Panel p_north = new Panel();
-//        p_north.add(numColsLabel);
-//        p_north.add(numColsChoice);
-//        p_north.add(numRowsLabel);
-//        p_north.add(numRowsChoice);
-        p_north.add(numColoursLabel);
-        p_north.add(numColoursChoice);
-        add(p_north, BorderLayout.NORTH);
+        Panel northPanel = new Panel();
+        northPanel.add(numColoursLabel);
+        northPanel.add(numColoursChoice);
+        northPanel.add(scoreLabel);
+        add(northPanel, BorderLayout.NORTH);
 
         addWindowListener(this);
 
@@ -181,49 +166,52 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         if (e.getSource() == okBtn) {
             setAppState(SHOWIN_RESULT_STATE);
         }
-        if (e.getSource() == nextBtn){
+        if (e.getSource() == nextBtn) {
             setAppState(SHOW_STATE);
         }
         if (e.getSource() == cancelBtn) {
+            outputResult();
             setAppState(INITIAL_STATE);
         }
     }
 
     private boolean checkResult() {
-        boolean check = true;
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
                 if (taskArr[i][j] != answerArr[i][j]) {
-                    check = false;
+                    return false;
                 }
             }
         }
-        return check;
+        score += rows * cols * numColours;
+        scoreLabel.setText(Integer.toString(score));
+        return true;
     }
 
-    private void outputResult(boolean isChecked) {
+    private void outputResult() {
         Date date = new Date();
-//        JSONStreamAware jSONStreamAware;
-//        JSONObject resultJSONObject = new JSONObject();
-//        resultJSONObject.put("game", "ColorSequence");
-//        resultJSONObject.put("date", date.toString());
-//        resultJSONObject.put("score", Integer.toString(score));
-//        resultJSONObject.put("maxSequenceLength", Integer.toString(maxSequenceLength));
-//        resultJSONObject.put("colours", numColoursChoice.getSelectedItem());
-//        jSONStreamAware = resultJSONObject;
+        JSONStreamAware jSONStreamAware;
+        JSONObject resultJSONObject = new JSONObject();
+        resultJSONObject.put("game", "CubicFrame");
+        resultJSONObject.put("date", date.toString());
+        resultJSONObject.put("score", Integer.toString(score));
+        resultJSONObject.put("maxCols", Integer.toString(maxCols));
+        resultJSONObject.put("maxRows", Integer.toString(maxRows));
+        resultJSONObject.put("maxColours", Integer.toString(maxColours));
+        jSONStreamAware = resultJSONObject;
 
-        String result = date.toString() + " " + Integer.toString(cols) + "X"
-                + Integer.toString(rows)
-                + " colours=" + numColoursChoice.getSelectedItem()
-                + " result=" + Boolean.toString(isChecked);
+//        String result = date.toString() + " " + Integer.toString(maxCols) + "X"
+//                + Integer.toString(maxRows)
+//                + " score= " + score
+//                + " colours=" + maxColours;
 
         try {
             sout = new FileWriter("d:/VMresult.txt", true);
-            for (int i = 0; i < result.length(); i++) {
-                sout.write(result.charAt(i));
-            }
+//            for (int i = 0; i < result.length(); i++) {
+//                sout.write(result.charAt(i));
+//            }
 //            sout.write('\n');
-//            jSONStreamAware.writeJSONString(sout);
+            jSONStreamAware.writeJSONString(sout);
             sout.write('\n');
             sout.flush();
             sout.close();
@@ -326,18 +314,19 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
     }
 
     private void setAppState(int state) {
-        System.out.println("goin' to set state " + state);
         if (state == INITIAL_STATE) {
+            repaint();
             this.state = state;
             this.cols = 2;
-            this.rows = 1;
+            this.rows = 2;
             this.score = 0;
+            scoreLabel.setText(Integer.toString(score));
             startBtn.setVisible(true);
             cancelBtn.setVisible(false);
             okBtn.setVisible(false);
             answerBtn.setVisible(false);
             nextBtn.setVisible(false);
-           
+
         }
         if (state == SHOW_STATE) {
             this.state = state;
@@ -346,14 +335,14 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             okBtn.setVisible(false);
             answerBtn.setVisible(true);
             nextBtn.setVisible(false);
-            
-            if(cols > rows){
-                rows++;
-            }else{
-                cols++;
+
+            numColours = numColoursChoice.getSelectedIndex() + 2;
+            if (maxColours < numColours){
+                maxColours = numColours;
             }
-           
-            createTaskArr(cols, rows, numColoursChoice.getSelectedIndex() + 2);
+
+            createTaskArr(cols, rows, numColours);
+            repaint();
             drawArr(taskArr);
         }
         if (state == GETTIN_RESULT_STATE) {
@@ -371,7 +360,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             okBtn.setVisible(true);
             answerBtn.setVisible(false);
             nextBtn.setVisible(false);
-            
+
             addMouseListener(this);
         }
         if (state == SHOWIN_RESULT_STATE) {
@@ -385,8 +374,26 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             nextBtn.setVisible(true);
 
             drawArr(taskArr);
-
-            outputResult(checkResult());
+            boolean result = checkResult();
+            if (cols > rows) {
+                if (!result && cols > 2) {
+                    cols--;
+                } else {
+                    rows++;
+                    if (maxRows < rows) {
+                        maxRows = rows;
+                    }
+                }
+            } else {
+                if (!result && rows > 2) {
+                    rows--;
+                } else {
+                    cols++;
+                    if (maxCols < cols) {
+                        maxCols = cols;
+                    }
+                }
+            }
         }
         validate();
     }
