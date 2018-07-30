@@ -342,7 +342,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             }
 
             createTaskArr(cols, rows, numColours);
-            repaint();
+//            repaint();
             drawArr(taskArr);
         }
         if (state == GETTIN_RESULT_STATE) {
