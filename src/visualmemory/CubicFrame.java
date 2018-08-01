@@ -250,6 +250,8 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
 
     private void drawArr(Color[][] array) {
         Graphics g = getGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, (cols + 2) * 25, (rows + 4)* 25);
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
                 if (array[i][j] == Color.gray) {
@@ -340,7 +342,6 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             if (maxColours < numColours){
                 maxColours = numColours;
             }
-
             createTaskArr(cols, rows, numColours);
 //            repaint();
             drawArr(taskArr);
