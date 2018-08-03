@@ -8,11 +8,8 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.Panel;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -25,17 +22,15 @@ import org.json.simple.JSONStreamAware;
  *
  * @author Waddle
  */
-public class CubicFrame extends Frame implements ActionListener,
-        MouseListener {
+public final class CubicGame extends VisualGame implements ActionListener{
     
     Frame frame;
 
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
     Choice numColoursChoice;
 
-    Color currentColor, taskArr[][], answerArr[][];
+    Color taskArr[][], answerArr[][];
 
-//    GraphicButton redButton, yellowButton, greenButton, blueButton;
     private Label scoreLabel;
 
     int cols = 2, rows = 2;
@@ -45,20 +40,10 @@ public class CubicFrame extends Frame implements ActionListener,
     int maxRows = 0;
 
     int score;
-
-    Writer sout;
-
-    private final int INITIAL_STATE = 0;
-    private final int SHOW_STATE = 1;
-    private final int GETTIN_RESULT_STATE = 2;
-    private final int SHOWIN_RESULT_STATE = 3;
-    int state;
-
-    public static void main(String[] args) {
-        CubicFrame myFrame = new CubicFrame();
-    }
     
-    CubicFrame(Frame frame){
+    int state;
+    
+    CubicGame(Frame frame){
         this.frame = frame;
         
         numColoursChoice = new Choice();
@@ -80,9 +65,6 @@ public class CubicFrame extends Frame implements ActionListener,
         Label numColoursLabel = new Label("Colours");
         scoreLabel = new Label("       ");
 
-        BorderLayout borderLayout = new BorderLayout();
-        frame.setLayout(borderLayout);
-
         Panel southPanel = new Panel();
         southPanel.add(startBtn);
         southPanel.add(answerBtn);
@@ -101,70 +83,6 @@ public class CubicFrame extends Frame implements ActionListener,
         
     }
 
-    CubicFrame() {
-        setTitle("VisualMemoryCubes");
-        setSize(350, 300);
-        setResizable(false);
-
-//        redButton = new GraphicButton(getSize().width - 40, 65, Color.red);
-//        yellowButton = new GraphicButton(getSize().width - 40, 100, Color.orange);
-//        greenButton = new GraphicButton(getSize().width - 40, 135, Color.green);
-//        blueButton = new GraphicButton(getSize().width - 40, 170, Color.blue);
-
-        numColoursChoice = new Choice();
-        numColoursChoice.add("2");
-        numColoursChoice.add("3");
-        numColoursChoice.add("4");
-
-//        taskArr = new Color[cols][rows];
-//        for (int i = 0; i < cols; i++) {
-//            for (int j = 0; j < rows; j++) {
-//                taskArr[i][j] = Color.gray;
-//            }
-//        }
-
-        startBtn = new Button("Старт");
-        startBtn.addActionListener(this);
-        answerBtn = new Button("Отвечать");
-        answerBtn.addActionListener(this);
-        okBtn = new Button("Ok");
-        okBtn.addActionListener(this);
-        cancelBtn = new Button("Стоп");
-        cancelBtn.addActionListener(this);
-        nextBtn = new Button("Следующий");
-        nextBtn.addActionListener(this);
-
-        Label numColoursLabel = new Label("Colours");
-        scoreLabel = new Label("       ");
-
-        BorderLayout borderLayout = new BorderLayout();
-        setLayout(borderLayout);
-
-        Panel southPanel = new Panel();
-        southPanel.add(startBtn);
-        southPanel.add(answerBtn);
-        southPanel.add(okBtn);
-        southPanel.add(nextBtn);
-        southPanel.add(cancelBtn);
-        add(southPanel, BorderLayout.SOUTH);
-
-        Panel northPanel = new Panel();
-        northPanel.add(numColoursLabel);
-        northPanel.add(numColoursChoice);
-        northPanel.add(scoreLabel);
-        add(northPanel, BorderLayout.NORTH);
-
-        setAppState(INITIAL_STATE);
-
-        setVisible(true);
-    }
-
-//    @Override
-//    public void paint(Graphics g) {
-//        drawBtns();
-//        drawBtnsRects(currentColor);
-//    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startBtn) {
@@ -180,9 +98,17 @@ public class CubicFrame extends Frame implements ActionListener,
             setAppState(SHOW_STATE);
         }
         if (e.getSource() == cancelBtn) {
-            outputResult();
+            outputResult(prepareJSON());
             setAppState(INITIAL_STATE);
         }
+    }
+    
+    boolean checkCell(int i, int j, Color currentColor){
+        if ((i >= 0) & (i < cols) & (j >= 0) & (j < rows)) {
+                answerArr[i][j] = currentColor;
+                return true;
+            }
+        return false;
     }
 
     private boolean checkResult() {
@@ -197,10 +123,10 @@ public class CubicFrame extends Frame implements ActionListener,
         scoreLabel.setText(Integer.toString(score));
         return true;
     }
-
-    void outputResult() {
+    
+    @Override
+    JSONObject prepareJSON(){
         Date date = new Date();
-        JSONStreamAware jSONStreamAware;
         JSONObject resultJSONObject = new JSONObject();
         resultJSONObject.put("game", "CubicFrame");
         resultJSONObject.put("date", date.toString());
@@ -208,27 +134,7 @@ public class CubicFrame extends Frame implements ActionListener,
         resultJSONObject.put("maxCols", Integer.toString(maxCols));
         resultJSONObject.put("maxRows", Integer.toString(maxRows));
         resultJSONObject.put("maxColours", Integer.toString(maxColours));
-        jSONStreamAware = resultJSONObject;
-
-//        String result = date.toString() + " " + Integer.toString(maxCols) + "X"
-//                + Integer.toString(maxRows)
-//                + " score= " + score
-//                + " colours=" + maxColours;
-
-        try {
-            sout = new FileWriter("d:/VMresult.txt", true);
-//            for (int i = 0; i < result.length(); i++) {
-//                sout.write(result.charAt(i));
-//            }
-//            sout.write('\n');
-            jSONStreamAware.writeJSONString(sout);
-            sout.write('\n');
-            sout.flush();
-            sout.close();
-
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
+        return resultJSONObject;
     }
 
     private void createTaskArr(int cols, int rows, int colours) {
@@ -277,55 +183,8 @@ public class CubicFrame extends Frame implements ActionListener,
         }
     }
 
-//    private void drawBtns() {
-//        Graphics g = frame.getGraphics();
-//
-//        redButton.draw(g);
-//        yellowButton.draw(g);
-//        greenButton.draw(g);
-//        blueButton.draw(g);
-//    }
-//
-//    private void drawBtnsRects(Color currentClr) {
-//        Graphics g = frame.getGraphics();
-//        redButton.isPressBtn(currentClr, g);
-//        yellowButton.isPressBtn(currentClr, g);
-//        greenButton.isPressBtn(currentClr, g);
-//        blueButton.isPressBtn(currentClr, g);
-//    }
-
     @Override
-    public void mousePressed(MouseEvent e) {
-        Point point = e.getPoint();
-        if (point.getX() >= (getSize().width - 40)) {
-            if (redButton.isWithin(point)) {
-                currentColor = Color.red;
-            }
-            if (yellowButton.isWithin(point)) {
-                currentColor = Color.orange;
-            }
-            if (greenButton.isWithin(point)) {
-                currentColor = Color.green;
-            }
-            if (blueButton.isWithin(point)) {
-                currentColor = Color.blue;
-            }
-//            drawBtnsRects(currentColor);
-        } else {
-            int i = (int) point.getX() / 25 - 1;
-            int j = (int) point.getY() / 25 - 3;
-
-            if ((i >= 0) & (i < cols) & (j >= 0) & (j < rows)) {
-
-                Graphics g = frame.getGraphics();
-                g.setColor(currentColor);
-                g.fillRect((i + 1) * 25, (j + 3) * 25, 24, 24);
-                answerArr[i][j] = currentColor;
-            }
-        }
-    }
-
-    private void setAppState(int state) {
+    void setAppState(int state) {
         if (state == INITIAL_STATE) {
             frame.repaint();
             this.state = state;
@@ -372,11 +231,11 @@ public class CubicFrame extends Frame implements ActionListener,
             answerBtn.setVisible(false);
             nextBtn.setVisible(false);
 
-            addMouseListener(this);
+//            addMouseListener(this);
         }
         if (state == SHOWIN_RESULT_STATE) {
             this.state = state;
-            removeMouseListener(this);
+//            removeMouseListener(this);
 
             startBtn.setVisible(false);
             cancelBtn.setVisible(true);
@@ -408,25 +267,4 @@ public class CubicFrame extends Frame implements ActionListener,
         }
         frame.validate();
     }
-    
-    void setCurrentColour(Color colour){
-        this.currentColor = colour;
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
 }

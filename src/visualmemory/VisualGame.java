@@ -7,17 +7,44 @@
 package visualmemory;
 
 import java.awt.Color;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONStreamAware;
 
 /**
  *
  * @author Bykov_SP
  */
 public abstract class VisualGame {
-    void outputResult(){};
+    
+    protected final int INITIAL_STATE = 0;
+    protected final int SHOW_STATE = 1;
+    protected final int GETTIN_RESULT_STATE = 2;
+    protected final int SHOWIN_RESULT_STATE = 3;
+    
+    abstract JSONObject prepareJSON(); 
+    
+    protected void outputResult(JSONObject resultJSONObject) {
+        JSONStreamAware jSONStreamAware;
+        
+        jSONStreamAware = resultJSONObject;
+
+        try {
+            Writer sout = new FileWriter("d:/VMresult.txt", true);
+
+            jSONStreamAware.writeJSONString(sout);
+            sout.write('\n');
+            sout.flush();
+            sout.close();
+
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
     
     void createTaskArr(){};
     
     void setAppState(int state){};
-    
-    void setCurrentColour(Color color){};
 }
