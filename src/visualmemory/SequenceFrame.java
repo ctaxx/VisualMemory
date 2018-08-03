@@ -298,7 +298,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         }
     }
 
-    private void outputResult() {
+    void outputResult() {
         Date date = new Date();
         JSONStreamAware jSONStreamAware;
         JSONObject resultJSONObject = new JSONObject();

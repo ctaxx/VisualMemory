@@ -13,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -27,15 +25,17 @@ import org.json.simple.JSONStreamAware;
  *
  * @author Waddle
  */
-public class CubicFrame extends Frame implements WindowListener, ActionListener,
+public class CubicFrame extends Frame implements ActionListener,
         MouseListener {
+    
+    Frame frame;
 
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
     Choice numColoursChoice;
 
     Color currentColor, taskArr[][], answerArr[][];
 
-    GraphicButton redButton, yellowButton, greenButton, blueButton;
+//    GraphicButton redButton, yellowButton, greenButton, blueButton;
     private Label scoreLabel;
 
     int cols = 2, rows = 2;
@@ -57,16 +57,59 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
     public static void main(String[] args) {
         CubicFrame myFrame = new CubicFrame();
     }
+    
+    CubicFrame(Frame frame){
+        this.frame = frame;
+        
+        numColoursChoice = new Choice();
+        numColoursChoice.add("2");
+        numColoursChoice.add("3");
+        numColoursChoice.add("4");
+        
+        startBtn = new Button("Старт");
+        startBtn.addActionListener(this);
+        answerBtn = new Button("Отвечать");
+        answerBtn.addActionListener(this);
+        okBtn = new Button("Ok");
+        okBtn.addActionListener(this);
+        cancelBtn = new Button("Стоп");
+        cancelBtn.addActionListener(this);
+        nextBtn = new Button("Следующий");
+        nextBtn.addActionListener(this);
+
+        Label numColoursLabel = new Label("Colours");
+        scoreLabel = new Label("       ");
+
+        BorderLayout borderLayout = new BorderLayout();
+        frame.setLayout(borderLayout);
+
+        Panel southPanel = new Panel();
+        southPanel.add(startBtn);
+        southPanel.add(answerBtn);
+        southPanel.add(okBtn);
+        southPanel.add(nextBtn);
+        southPanel.add(cancelBtn);
+        frame.add(southPanel, BorderLayout.SOUTH);
+
+        Panel northPanel = new Panel();
+        northPanel.add(numColoursLabel);
+        northPanel.add(numColoursChoice);
+        northPanel.add(scoreLabel);
+        frame.add(northPanel, BorderLayout.NORTH);
+
+        setAppState(INITIAL_STATE);
+        
+    }
 
     CubicFrame() {
         setTitle("VisualMemoryCubes");
         setSize(350, 300);
         setResizable(false);
 
-        redButton = new GraphicButton(getSize().width - 40, 65, Color.red);
-        yellowButton = new GraphicButton(getSize().width - 40, 100, Color.orange);
-        greenButton = new GraphicButton(getSize().width - 40, 135, Color.green);
-        blueButton = new GraphicButton(getSize().width - 40, 170, Color.blue);
+//        redButton = new GraphicButton(getSize().width - 40, 65, Color.red);
+//        yellowButton = new GraphicButton(getSize().width - 40, 100, Color.orange);
+//        greenButton = new GraphicButton(getSize().width - 40, 135, Color.green);
+//        blueButton = new GraphicButton(getSize().width - 40, 170, Color.blue);
 
         numColoursChoice = new Choice();
         numColoursChoice.add("2");
@@ -111,49 +154,16 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         northPanel.add(scoreLabel);
         add(northPanel, BorderLayout.NORTH);
 
-        addWindowListener(this);
-
         setAppState(INITIAL_STATE);
 
         setVisible(true);
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) {
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        setVisible(false);
-        System.exit(0);
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    @Override
-    public void paint(Graphics g) {
-//        drawArr(taskArr);
-        drawBtns();
-        drawBtnsRects(currentColor);
-    }
+//    @Override
+//    public void paint(Graphics g) {
+//        drawBtns();
+//        drawBtnsRects(currentColor);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -188,7 +198,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         return true;
     }
 
-    private void outputResult() {
+    void outputResult() {
         Date date = new Date();
         JSONStreamAware jSONStreamAware;
         JSONObject resultJSONObject = new JSONObject();
@@ -249,7 +259,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
     }
 
     private void drawArr(Color[][] array) {
-        Graphics g = getGraphics();
+        Graphics g = frame.getGraphics();
         g.setColor(Color.white);
         g.fillRect(0, 0, (cols + 2) * 25, (rows + 4)* 25);
         for (int i = 0; i < cols; i++) {
@@ -267,22 +277,22 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
         }
     }
 
-    private void drawBtns() {
-        Graphics g = getGraphics();
-
-        redButton.draw(g);
-        yellowButton.draw(g);
-        greenButton.draw(g);
-        blueButton.draw(g);
-    }
-
-    private void drawBtnsRects(Color currentClr) {
-        Graphics g = getGraphics();
-        redButton.isPressBtn(currentClr, g);
-        yellowButton.isPressBtn(currentClr, g);
-        greenButton.isPressBtn(currentClr, g);
-        blueButton.isPressBtn(currentClr, g);
-    }
+//    private void drawBtns() {
+//        Graphics g = frame.getGraphics();
+//
+//        redButton.draw(g);
+//        yellowButton.draw(g);
+//        greenButton.draw(g);
+//        blueButton.draw(g);
+//    }
+//
+//    private void drawBtnsRects(Color currentClr) {
+//        Graphics g = frame.getGraphics();
+//        redButton.isPressBtn(currentClr, g);
+//        yellowButton.isPressBtn(currentClr, g);
+//        greenButton.isPressBtn(currentClr, g);
+//        blueButton.isPressBtn(currentClr, g);
+//    }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -300,14 +310,14 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
             if (blueButton.isWithin(point)) {
                 currentColor = Color.blue;
             }
-            drawBtnsRects(currentColor);
+//            drawBtnsRects(currentColor);
         } else {
             int i = (int) point.getX() / 25 - 1;
             int j = (int) point.getY() / 25 - 3;
 
             if ((i >= 0) & (i < cols) & (j >= 0) & (j < rows)) {
 
-                Graphics g = getGraphics();
+                Graphics g = frame.getGraphics();
                 g.setColor(currentColor);
                 g.fillRect((i + 1) * 25, (j + 3) * 25, 24, 24);
                 answerArr[i][j] = currentColor;
@@ -317,7 +327,7 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
 
     private void setAppState(int state) {
         if (state == INITIAL_STATE) {
-            repaint();
+            frame.repaint();
             this.state = state;
             this.cols = 2;
             this.rows = 2;
@@ -396,7 +406,11 @@ public class CubicFrame extends Frame implements WindowListener, ActionListener,
                 }
             }
         }
-        validate();
+        frame.validate();
+    }
+    
+    void setCurrentColour(Color colour){
+        this.currentColor = colour;
     }
 
     @Override
