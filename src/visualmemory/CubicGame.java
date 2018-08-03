@@ -10,13 +10,9 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Date;
 import java.util.Random;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONStreamAware;
 
 /**
  *
