@@ -24,6 +24,7 @@ public final class CubicGame extends VisualGame implements ActionListener{
 
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
     Choice numColoursChoice;
+    Choice userChoice;
 
     Color taskArr[][], answerArr[][];
 
@@ -41,6 +42,11 @@ public final class CubicGame extends VisualGame implements ActionListener{
     
     CubicGame(Frame frame){
         this.frame = frame;
+        
+        userChoice = new Choice();
+        userChoice.add(" ");
+        userChoice.add("Андрей");
+        userChoice.add("Стас");
         
         numColoursChoice = new Choice();
         numColoursChoice.add("2");
@@ -70,6 +76,7 @@ public final class CubicGame extends VisualGame implements ActionListener{
         frame.add(southPanel, BorderLayout.SOUTH);
 
         Panel northPanel = new Panel();
+        northPanel.add(userChoice);
         northPanel.add(numColoursLabel);
         northPanel.add(numColoursChoice);
         northPanel.add(scoreLabel);
@@ -130,6 +137,7 @@ public final class CubicGame extends VisualGame implements ActionListener{
         resultJSONObject.put("maxCols", Integer.toString(maxCols));
         resultJSONObject.put("maxRows", Integer.toString(maxRows));
         resultJSONObject.put("maxColours", Integer.toString(maxColours));
+        resultJSONObject.put("user", userChoice.getSelectedItem());
         return resultJSONObject;
     }
 

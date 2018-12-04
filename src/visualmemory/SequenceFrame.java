@@ -36,6 +36,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
 
     private final Button startBtn, cancelBtn;
     private final Choice numColoursChoice;
+    Choice userChoice;
 //    , sequenceLengthChoice;
 
     private Color currentColor, taskArr[];
@@ -72,6 +73,12 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         greenButton = new GraphicButton(getSize().width - 40, 135, Color.green);
         blueButton = new GraphicButton(getSize().width - 40, 170, Color.blue);
 
+        userChoice = new Choice();
+        userChoice.add(" ");
+        userChoice.add("Андрей");
+        userChoice.add("Стас");
+        
+        
         numColoursChoice = new Choice();
         numColoursChoice.add("2");
         numColoursChoice.add("3");
@@ -95,6 +102,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         add(southPanel, BorderLayout.SOUTH);
 
         Panel northPanel = new Panel();
+        northPanel.add(userChoice);
         northPanel.add(numColoursLabel);
         northPanel.add(numColoursChoice);
         northPanel.add(scoreLabel);
@@ -307,6 +315,7 @@ public class SequenceFrame extends Frame implements WindowListener, ActionListen
         resultJSONObject.put("score", Integer.toString(score));
         resultJSONObject.put("maxSequenceLength", Integer.toString(maxSequenceLength));
         resultJSONObject.put("colours", numColoursChoice.getSelectedItem());
+        resultJSONObject.put("user", userChoice.getSelectedItem());
         jSONStreamAware = resultJSONObject;
 
 //        String result = date.toString()
