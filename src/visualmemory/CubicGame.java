@@ -8,8 +8,11 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.Panel;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.Date;
 import java.util.Random;
 import org.json.simple.JSONObject;
@@ -18,9 +21,9 @@ import org.json.simple.JSONObject;
  *
  * @author Waddle
  */
-public final class CubicGame extends VisualGame implements ActionListener{
+public final class CubicGame extends VisualGame implements ActionListener, MouseMotionListener{
     
-    Frame frame;
+    MainFrame frame;
 
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
     Choice numColoursChoice;
@@ -40,7 +43,7 @@ public final class CubicGame extends VisualGame implements ActionListener{
     
     int state;
     
-    CubicGame(Frame frame){
+    CubicGame(MainFrame frame){
         this.frame = frame;
         
         userChoice = new Choice();
@@ -270,5 +273,22 @@ public final class CubicGame extends VisualGame implements ActionListener{
             }
         }
         frame.validate();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        Point point = e.getPoint();
+        int i = (int) point.getX() / 25 - 1;
+        int j = (int) point.getY() / 25 - 3;
+
+        if (this.checkCell(i, j, frame.getCurrentColor())) {
+            Graphics g = frame.getGraphics();
+            g.setColor(frame.getCurrentColor());
+            g.fillRect((i + 1) * 25, (j + 3) * 25, 24, 24);
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
     }
 }

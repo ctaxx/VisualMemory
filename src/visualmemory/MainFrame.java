@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package visualmemory;
 
 import java.awt.BorderLayout;
@@ -20,45 +19,50 @@ import java.awt.event.WindowListener;
  *
  * @author Bykov_SP
  */
-public class MainFrame extends Frame implements WindowListener, MouseListener{
-    
+public class MainFrame extends Frame implements WindowListener, MouseListener {
+
     GraphicButton redButton, yellowButton, greenButton, blueButton;
-    
+
     CubicGame cubicGame;
-    
+
     Color currentColor;
-    
-    public static void main(String [] args){
-        Frame frame  = new MainFrame();
+
+    public static void main(String[] args) {
+        Frame frame = new MainFrame();
     }
-    
-    public MainFrame(){
+
+    public MainFrame() {
         setTitle("VisualMemory");
         setSize(350, 300);
         setResizable(false);
-        
+
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
-        
+
         redButton = new GraphicButton(getSize().width - 40, 65, Color.red);
         yellowButton = new GraphicButton(getSize().width - 40, 100, Color.orange);
         greenButton = new GraphicButton(getSize().width - 40, 135, Color.green);
         blueButton = new GraphicButton(getSize().width - 40, 170, Color.blue);
-        
+
         cubicGame = new CubicGame(this);
-        
+
         addMouseListener(this);
+        addMouseMotionListener(cubicGame);
         addWindowListener(this);
         setVisible(true);
     }
-    
+
     @Override
     public void paint(Graphics g) {
         drawBtns();
         drawBtnsRects(currentColor);
     }
-    
-        private void drawBtns() {
+
+    public Color getCurrentColor() {
+        return currentColor;
+    }
+
+    private void drawBtns() {
         Graphics g = getGraphics();
 
         redButton.draw(g);
@@ -76,30 +80,38 @@ public class MainFrame extends Frame implements WindowListener, MouseListener{
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {
+    }
 
     @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
-        System.exit(0);}
+        System.exit(0);
+    }
 
     @Override
-    public void windowClosed(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {
+    }
 
     @Override
-    public void windowIconified(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {
+    }
 
     @Override
-    public void windowDeiconified(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {
+    }
 
     @Override
-    public void windowActivated(WindowEvent e) {}
+    public void windowActivated(WindowEvent e) {
+    }
 
     @Override
-    public void windowDeactivated(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {
+    }
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -132,12 +144,15 @@ public class MainFrame extends Frame implements WindowListener, MouseListener{
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    }
 
     @Override
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
     @Override
-    public void mouseExited(MouseEvent e) {}
-    
+    public void mouseExited(MouseEvent e) {
+    }
+
 }
