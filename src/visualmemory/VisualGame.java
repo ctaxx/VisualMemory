@@ -6,7 +6,8 @@
 
 package visualmemory;
 
-import java.awt.Color;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -17,7 +18,7 @@ import org.json.simple.JSONStreamAware;
  *
  * @author Bykov_SP
  */
-public abstract class VisualGame {
+public abstract class VisualGame implements MouseListener, MouseMotionListener{
     
     protected final int INITIAL_STATE = 0;
     protected final int SHOW_STATE = 1;
@@ -31,9 +32,8 @@ public abstract class VisualGame {
         
         jSONStreamAware = resultJSONObject;
 
-        try {
-            Writer sout = new FileWriter("d:/VMresult.txt", true);
-
+        try(Writer sout = new FileWriter("d:/VMresult.txt", true)) {
+            
             jSONStreamAware.writeJSONString(sout);
             sout.write('\n');
             sout.flush();

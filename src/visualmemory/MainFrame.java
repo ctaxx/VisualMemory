@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,7 +24,7 @@ public class MainFrame extends Frame implements WindowListener, MouseListener {
 
     GraphicButton redButton, yellowButton, greenButton, blueButton;
 
-    CubicGame cubicGame;
+    VisualGame visualGame;
 
     Color currentColor;
 
@@ -44,10 +45,11 @@ public class MainFrame extends Frame implements WindowListener, MouseListener {
         greenButton = new GraphicButton(getSize().width - 40, 135, Color.green);
         blueButton = new GraphicButton(getSize().width - 40, 170, Color.blue);
 
-        cubicGame = new CubicGame(this);
+        visualGame = new CubicGame(this);
 
         addMouseListener(this);
-        addMouseMotionListener(cubicGame);
+        addMouseListener(visualGame);
+        addMouseMotionListener(visualGame);
         addWindowListener(this);
         setVisible(true);
     }
@@ -130,16 +132,6 @@ public class MainFrame extends Frame implements WindowListener, MouseListener {
                 currentColor = Color.blue;
             }
             drawBtnsRects(currentColor);
-        } else {
-            int i = (int) point.getX() / 25 - 1;
-            int j = (int) point.getY() / 25 - 3;
-
-            if (cubicGame.checkCell(i, j, currentColor)) {
-
-                Graphics g = getGraphics();
-                g.setColor(currentColor);
-                g.fillRect((i + 1) * 25, (j + 3) * 25, 24, 24);
-            }
         }
     }
 

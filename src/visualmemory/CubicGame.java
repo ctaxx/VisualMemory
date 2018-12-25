@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.Panel;
@@ -12,7 +11,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.Date;
 import java.util.Random;
 import org.json.simple.JSONObject;
@@ -21,8 +19,8 @@ import org.json.simple.JSONObject;
  *
  * @author Waddle
  */
-public final class CubicGame extends VisualGame implements ActionListener, MouseMotionListener{
-    
+public final class CubicGame extends VisualGame implements ActionListener {
+
     MainFrame frame;
 
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
@@ -40,22 +38,22 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
     int maxRows = 0;
 
     int score;
-    
+
     int state;
-    
-    CubicGame(MainFrame frame){
+
+    CubicGame(MainFrame frame) {
         this.frame = frame;
-        
+
         userChoice = new Choice();
         userChoice.add(" ");
         userChoice.add("Андрей");
         userChoice.add("Стас");
-        
+
         numColoursChoice = new Choice();
         numColoursChoice.add("2");
         numColoursChoice.add("3");
         numColoursChoice.add("4");
-        
+
         startBtn = new Button("Старт");
         startBtn.addActionListener(this);
         answerBtn = new Button("Отвечать");
@@ -86,7 +84,7 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
         frame.add(northPanel, BorderLayout.NORTH);
 
         setAppState(INITIAL_STATE);
-        
+
     }
 
     @Override
@@ -108,12 +106,12 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
             setAppState(INITIAL_STATE);
         }
     }
-    
-    boolean checkCell(int i, int j, Color currentColor){
+
+    boolean checkCell(int i, int j, Color currentColor) {
         if ((i >= 0) & (i < cols) & (j >= 0) & (j < rows)) {
-                answerArr[i][j] = currentColor;
-                return true;
-            }
+            answerArr[i][j] = currentColor;
+            return true;
+        }
         return false;
     }
 
@@ -129,9 +127,9 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
         scoreLabel.setText(Integer.toString(score));
         return true;
     }
-    
+
     @Override
-    JSONObject prepareJSON(){
+    JSONObject prepareJSON() {
         Date date = new Date();
         JSONObject resultJSONObject = new JSONObject();
         resultJSONObject.put("game", "CubicFrame");
@@ -174,7 +172,7 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
     private void drawArr(Color[][] array) {
         Graphics g = frame.getGraphics();
         g.setColor(Color.white);
-        g.fillRect(0, 0, (cols + 2) * 25, (rows + 4)* 25);
+        g.fillRect(0, 0, (cols + 2) * 25, (rows + 4) * 25);
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
                 if (array[i][j] == Color.gray) {
@@ -215,7 +213,7 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
             nextBtn.setVisible(false);
 
             numColours = numColoursChoice.getSelectedIndex() + 2;
-            if (maxColours < numColours){
+            if (maxColours < numColours) {
                 maxColours = numColours;
             }
             createTaskArr(cols, rows, numColours);
@@ -290,5 +288,39 @@ public final class CubicGame extends VisualGame implements ActionListener, Mouse
 
     @Override
     public void mouseMoved(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Point point = e.getPoint();
+        int i = (int) point.getX() / 25 - 1;
+        int j = (int) point.getY() / 25 - 3;
+
+        if (this.checkCell(i, j, frame.getCurrentColor())) {
+
+            Graphics g = frame.getGraphics();
+            g.setColor(frame.getCurrentColor());
+            g.fillRect((i + 1) * 25, (j + 3) * 25, 24, 24);
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
