@@ -76,12 +76,10 @@ public final class CubicGame extends VisualGame implements ActionListener {
         southPanel.add(cancelBtn);
         frame.add(southPanel, BorderLayout.SOUTH);
 
-        Panel northPanel = new Panel();
-        northPanel.add(userChoice);
-        northPanel.add(numColoursLabel);
-        northPanel.add(numColoursChoice);
-        northPanel.add(scoreLabel);
-        frame.add(northPanel, BorderLayout.NORTH);
+        frame.northPanel.add(userChoice);
+        frame.northPanel.add(numColoursLabel);
+        frame.northPanel.add(numColoursChoice);
+        frame.northPanel.add(scoreLabel);
 
         setAppState(INITIAL_STATE);
 
@@ -287,15 +285,6 @@ public final class CubicGame extends VisualGame implements ActionListener {
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
     public void mousePressed(MouseEvent e) {
         Point point = e.getPoint();
         int i = (int) point.getX() / 25 - 1;
@@ -310,17 +299,7 @@ public final class CubicGame extends VisualGame implements ActionListener {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
+    void clearGame() {
+        
     }
 }

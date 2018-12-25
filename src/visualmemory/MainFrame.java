@@ -6,7 +6,9 @@
 package visualmemory;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Panel;
@@ -23,6 +25,7 @@ import java.awt.event.WindowListener;
 public class MainFrame extends Frame implements WindowListener, MouseListener {
 
     GraphicButton redButton, yellowButton, greenButton, blueButton;
+    Panel northPanel;
 
     VisualGame visualGame;
 
@@ -39,6 +42,13 @@ public class MainFrame extends Frame implements WindowListener, MouseListener {
 
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
+        
+        northPanel = new Panel();
+        
+        Button menuButton = new Button("Menu");
+        northPanel.add(menuButton);
+        
+        add(northPanel, BorderLayout.NORTH);
 
         redButton = new GraphicButton(getSize().width - 40, 65, Color.red);
         yellowButton = new GraphicButton(getSize().width - 40, 100, Color.orange);
