@@ -15,6 +15,8 @@ import org.json.simple.JSONStreamAware;
  */
 public abstract class VisualGame implements MouseListener, MouseMotionListener{
     
+    MainFrame frame;
+    
     protected final int INITIAL_STATE = 0;
     protected final int SHOW_STATE = 1;
     protected final int GETTIN_RESULT_STATE = 2;

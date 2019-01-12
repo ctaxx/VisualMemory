@@ -1,5 +1,7 @@
 package visualmemory;
 
+import java.awt.BorderLayout;
+import java.awt.Panel;
 import org.json.simple.JSONObject;
 
 /**
@@ -7,6 +9,15 @@ import org.json.simple.JSONObject;
  * @author bykov_s_p
  */
 public class StartScreen extends VisualGame{
+    
+    public StartScreen(MainFrame frame){
+        this.frame = frame;
+        drawMenuButtons();
+    }
+    
+    private void drawMenuButtons(){
+        
+    }
 
     @Override
     JSONObject prepareJSON() {

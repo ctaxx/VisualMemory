@@ -21,8 +21,6 @@ import org.json.simple.JSONObject;
  */
 public final class CubicGame extends VisualGame implements ActionListener {
 
-    MainFrame frame;
-
     Button answerBtn, okBtn, startBtn, cancelBtn, nextBtn;
     Choice numColoursChoice;
     Choice userChoice;
