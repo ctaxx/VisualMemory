@@ -28,5 +28,10 @@ public class StartScreen extends VisualGame{
     void clearGame() {
         
     }
+
+    @Override
+    void drawContent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

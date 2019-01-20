@@ -47,6 +47,8 @@ public abstract class VisualGame implements MouseListener, MouseMotionListener{
     
     abstract void clearGame();
     
+    abstract void drawContent();
+    
     @Override
     public void mouseClicked(MouseEvent e) {
         

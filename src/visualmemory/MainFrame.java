@@ -68,6 +68,7 @@ public class MainFrame extends Frame implements WindowListener, MouseListener {
     public void paint(Graphics g) {
         drawBtns();
         drawBtnsRects(currentColor);
+        visualGame.drawContent();
     }
 
     public Color getCurrentColor() {

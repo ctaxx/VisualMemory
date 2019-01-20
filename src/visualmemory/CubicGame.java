@@ -183,6 +183,19 @@ public final class CubicGame extends VisualGame implements ActionListener {
             }
         }
     }
+    
+    @Override
+    void drawContent(){
+        if (state == SHOW_STATE) {
+            drawArr(taskArr);
+        }
+        if (state == GETTIN_RESULT_STATE) {
+            drawArr(answerArr);
+        }
+        if (state == SHOWIN_RESULT_STATE) {
+            drawArr(taskArr);
+        }
+    }
 
     @Override
     void setAppState(int state) {
@@ -213,7 +226,7 @@ public final class CubicGame extends VisualGame implements ActionListener {
                 maxColours = numColours;
             }
             createTaskArr(cols, rows, numColours);
-//            repaint();
+//            frame.repaint();
             drawArr(taskArr);
         }
         if (state == GETTIN_RESULT_STATE) {
@@ -224,6 +237,7 @@ public final class CubicGame extends VisualGame implements ActionListener {
                     answerArr[i][j] = Color.gray;
                 }
             }
+//            frame.repaint();
             drawArr(answerArr);
 
             startBtn.setVisible(false);
@@ -231,12 +245,10 @@ public final class CubicGame extends VisualGame implements ActionListener {
             okBtn.setVisible(true);
             answerBtn.setVisible(false);
             nextBtn.setVisible(false);
-
-//            addMouseListener(this);
+            
         }
         if (state == SHOWIN_RESULT_STATE) {
             this.state = state;
-//            removeMouseListener(this);
 
             startBtn.setVisible(false);
             cancelBtn.setVisible(true);
@@ -244,7 +256,8 @@ public final class CubicGame extends VisualGame implements ActionListener {
             answerBtn.setVisible(false);
             nextBtn.setVisible(true);
 
-            drawArr(taskArr);
+//            frame.repaint();
+            drawArr(taskArr); 
             boolean result = checkResult();
             if (cols > rows) {
                 if (!result && cols > 2) {
@@ -266,6 +279,7 @@ public final class CubicGame extends VisualGame implements ActionListener {
                 }
             }
         }
+//        frame.repaint();
         frame.validate();
     }
 
